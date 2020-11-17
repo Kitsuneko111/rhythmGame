@@ -10,3 +10,9 @@ nea*
 *.ogg
 /localData
 .idea
+__pycache__
+*.png
+*.ttf
+*.log
+*.drawio
+*.mp4
