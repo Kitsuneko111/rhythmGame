@@ -1,0 +1,5 @@
+[0718/232104.081:ERROR:process_reader_win.cc(127)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[0718/232104.085:ERROR:exception_snapshot_win.cc(99)] thread ID 33988 not found in process
+[0718/232104.330:ERROR:minidumpwritedump_with_crashpad_info.cc(435)] Failed to call MiniDumpWriteDump: Access is denied. (0x80070005)
+[0718/232104.330:ERROR:minidumpwritedump_with_crashpad_info.cc(592)] Failed to write minidump file
+[0718/232104.330:ERROR:crash_report_exception_handler.cc(132)] TryMiniDumpWriteDumpWithCrashpadInfo failed
