@@ -16,3 +16,4 @@ __pycache__
 *.log
 *.drawio
 *.mp4
+*test*
