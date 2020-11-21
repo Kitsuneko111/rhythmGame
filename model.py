@@ -41,13 +41,14 @@ class MainMenu(Menu):
     """specific requirements for the main menu"""
     def __init__(self):
         super().__init__('Main', {
-            "Start": Button('Start', 256, 320, 135, 240, (6, 37, 191), (82, 215, 255), 90,
+            "Start": Button('Start', 256, 282, 115, 240, (6, 37, 191), (82, 215, 255), 90,
                             lambda: self._m.run_game()),
-            "Random Song": Button("Random Song", 256, 130, 65, 290, (6, 37, 191), (82, 215, 255), 40,
+            "Random\nSong": Button("Random\nSong", 128, 150, 110, 230, (6, 37, 191), (82, 215, 255), 40,
                                   lambda: self.randomise_song()),
-            "Change Difficulty": Button("Change Difficulty", 256, 205, 55, 335, (6, 37, 191), (82, 215, 255), 40,
+            "Change\nDifficulty": Button("Change\nDifficulty", 256+128, 150, 110, 230, (6, 37, 191), (82, 215, 255), 40,
                                          lambda: self.change_difficulty()),
-            "Quit": Button("Quit", 256, 450, 50, 100, (6, 37, 191), (82, 215, 255), 30, lambda: self._m.quit())
+            "Quit": Button("Quit", 256, 450, 50, 100, (6, 37, 191), (82, 215, 255), 30, lambda: self._m.quit()),
+            "Scores": Button("Scores", 256, 382, 57, 125, (6, 37, 191), (82, 215, 255), 35)
         },
                          [
                              Button("None", 256, 50, 50, 475, (6, 37, 191), (82, 215, 255), 25,
