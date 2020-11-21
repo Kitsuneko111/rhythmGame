@@ -391,8 +391,8 @@ class Model:
                         "auto increment primary key, foreign key (player_id) references players(player_id))")
 
     def init_players(self):
-        self.db.execute("create table if not exists players(player_name varchar(255), player_id integer auto "
-                        "increment primary key)")
+        self.db.execute("create table if not exists players(player_name varchar(255), player_id integer "
+                        "primary key autoincrement)")
 
     def quit(self):
         self._c.quit()
@@ -522,8 +522,10 @@ class Model:
         print(player_id)
         if not player_id:
             self.db.execute("insert into players values (?, ?)", [player_name, None])
-            player_id = self.db.execute("select player_id from players where player_name = ?", [player_name]).fetchone()
+            player_id = self.db.execute("select player_id from players where player_name = ?", [player_name]).fetchone()[0]
         #NOW RETURNS (None, )
+        else:
+            player_id = player_id[0]
         print(player_id)
         self.db.execute("insert into scores values(?, ?, ?, ?, ?)", [points, difficulty, song_name, player_id, None])
 #(None, )
