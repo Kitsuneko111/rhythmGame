@@ -162,10 +162,16 @@ class Menu:
             height = button[3]
             colour = button[5] if not button[7] else button[6]
             pygame.draw.rect(self._view.win, colour, (x-width//2, y-height//2, width, height), width=0, border_radius=22)
-            font = pygame.font.Font('Play-Bold.ttf', button[8])
-            render = font.render(button[0], True, (250, 88, 70))
-            size = render.get_size()
-            self._view.win.blit(render, (x-size[0]//2, y-size[1]//2-5))
+            text = button[0].split("\n")
+            ofont = pygame.font.Font("Play-Bold.ttf", button[8])
+            orender = ofont.render(button[0], True, (0,0,0))
+            osize = list(orender.get_size())
+            osize[1] *= len(text)
+            for i in range(len(text)):
+                font = pygame.font.Font('Play-Bold.ttf', button[8])
+                render = font.render(text[i], True, (250, 88, 70))
+                size = render.get_size()
+                self._view.win.blit(render, (x-size[0]//2, y-size[1]*(1-(i+1))//len(text)-15-(osize[1]*0.2)-10*len(text)+10*(i+1)))
 
     def add_trail(self):
         self.trails.append([self._view.c.get_player_center(), 10, 3])
