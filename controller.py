@@ -6,7 +6,7 @@ class Controller:
     """class for going between UI and backend"""
     def __init__(self, model, view):
         self._model = model
-        self._view:View = view
+        self._view: View = view
         self._view.register(self)
         self._model.register_c(self)
 
@@ -55,6 +55,9 @@ class Controller:
         """stops the backend"""
         self._model.obstacles = []
         self._model.player = Player()
+
+    def scoreboard(self):
+        self._view.scoreboard.run()
 
     def get_points(self):
         """gets the number of obstacles avoided"""

@@ -37,6 +37,13 @@ class Menu:
             return statics
 
 
+class Scoreboard(Menu):
+    def __init__(self):
+        super().__init__("Scores", {
+            "Back": Button("Back", 50, 25, 12, 48, (6, 37, 191), (82, 215, 255), "Back", )
+        },
+                         [])
+
 class MainMenu(Menu):
     """specific requirements for the main menu"""
     def __init__(self):
@@ -48,7 +55,7 @@ class MainMenu(Menu):
             "Change\nDifficulty": Button("Change\nDifficulty", 256+128, 150, 110, 230, (6, 37, 191), (82, 215, 255), 40,
                                          lambda: self.change_difficulty()),
             "Quit": Button("Quit", 256, 450, 50, 100, (6, 37, 191), (82, 215, 255), 30, lambda: self._m.quit()),
-            "Scores": Button("Scores", 256, 382, 57, 125, (6, 37, 191), (82, 215, 255), 35)
+            "Scores": Button("Scores", 256, 382, 57, 125, (6, 37, 191), (82, 215, 255), 35, lambda: self._m.show_scores())
         },
                          [
                              Button("None", 256, 50, 50, 475, (6, 37, 191), (82, 215, 255), 25,
@@ -363,7 +370,7 @@ class Model:
         self.difficulty = 0
         self.difficulties = [1, 2, 4, 30, 180]
         self.diffNames = ['Easiest', 'Easy', 'Normal', 'Hard', 'MAX']
-        self.menus = {'Main': MainMenu()}
+        self.menus = {'Main': MainMenu(), "Scores": Scoreboard()}
         self.songs = [("./Astley.mp3", 113),
                       ("./The Piano Guys/So Far, So Good/03 - Fight Song _ Amazing Grace.mp3", 88),
                       ("./The Piano Guys/So Far, So Good/09 - Titanium _ Pavane.mp3", 127),
@@ -378,6 +385,9 @@ class Model:
         self.db = conn.cursor()
         self.init_players()
         self.init_scores()
+
+    def show_scores(self):
+        self._c.scoreboard()
 
     def return_scores(self, player_name="*"):
         print("fetching")
@@ -529,7 +539,7 @@ class Model:
             player_id = player_id[0]
         print(player_id)
         self.db.execute("insert into scores values(?, ?, ?, ?, ?)", [points, difficulty, song_name, player_id, None])
-#(None, )
+
 
 # Testing area
 # test_obstacle = Obstacle()
