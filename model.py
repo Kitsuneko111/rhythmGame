@@ -40,9 +40,31 @@ class Menu:
 class Scoreboard(Menu):
     def __init__(self):
         super().__init__("Scores", {
-            "Back": Button("Back", 50, 25, 12, 48, (6, 37, 191), (82, 215, 255), "Back", )
+            "Back": Button("Back", 50, 25, 40, 75, (6, 37, 191), (82, 215, 255), 25, lambda: self._m.stop_scores())
         },
-                         [])
+                         [
+                             Button("Scoreboard", 256, 65, 45, 350, (6, 37, 191), (82, 215, 255), 35, lambda: None),
+                             Button("1", 256, 125, 35, 325, (6, 37, 191), (82, 215, 255), 35, lambda: None),
+                             Button("2", 256, 165, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda:None),
+                             Button("3", 256, 205, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda: None),
+                             Button("4", 256, 245, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda: None),
+                             Button("5", 256, 285, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda: None),
+                             Button("6", 256, 325, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda: None),
+                             Button("7", 256, 365, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda: None),
+                             Button("8", 256, 405, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda: None),
+                             Button("9", 256, 445, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda: None),
+                             Button("10", 256, 485, 35, 325, (6, 3, 191), (82, 215, 255), 35, lambda: None),
+
+                         ])
+
+    def top_10(self):
+        for i in range(10):
+            self.statics[i+1].name = str(i+1)
+        results = self._m.return_scores()
+        for i in range(len(results)):
+            player = self._m.get_player(results[i][1])
+            self.statics[i+1].name = player+" - "+str(results[i][0])
+
 
 class MainMenu(Menu):
     """specific requirements for the main menu"""
@@ -381,17 +403,29 @@ class Model:
         self.track_no = 0
         self.register()
         self._c = None
-        conn = sqlite3.connect("./localData/database.db")
-        self.db = conn.cursor()
+        self.conn = sqlite3.connect("localData/database.db")
+        self.db = self.conn.cursor()
         self.init_players()
         self.init_scores()
 
+    def stop_scores(self):
+        self._c.stop_scoreboard()
+
     def show_scores(self):
+        self.menus["Scores"].top_10()
         self._c.scoreboard()
 
-    def return_scores(self, player_name="*"):
-        print("fetching")
-        self.db.execute("select players.player_name, scores.points, scores.difficulty, scores.song_name from scores,players where scores.player_id = players.player_id and players.player_name = ?", player_name)
+    def get_player(self, player_id):
+        self.db.execute("select player_name from players where player_id = ?", [player_id])
+        player = self.db.fetchone()
+        print(player)
+        return player[0]
+
+    def return_scores(self, top=True):
+        self.db.execute("select * from scores")
+        scores = self.db.fetchall()
+        print(scores)
+        self.db.execute("select points, player_id from scores where song_name = ? and difficulty = ? order by points desc limit 10", [self.songs[self.track_no][0], self.difficulty])
         scores = self.db.fetchall()
         print(scores)
         return scores
@@ -539,7 +573,7 @@ class Model:
             player_id = player_id[0]
         print(player_id)
         self.db.execute("insert into scores values(?, ?, ?, ?, ?)", [points, difficulty, song_name, player_id, None])
-
+        self.conn.commit()
 
 # Testing area
 # test_obstacle = Obstacle()
