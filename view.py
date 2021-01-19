@@ -1,29 +1,68 @@
-try:
-    import pygame
-except ImportError:
-    raise(Exception('You will need to download pygame for this!'))
+import pygame
 # import tkinter as tk
 
-pygame.font.init()
+#pygame.init()
 print(pygame.font.get_fonts())
 
 
 class View:
     """class for controlling the overall frontend"""
     def __init__(self):
-        pygame.init()
-        pygame.font.init()
+        #pygame.init()
+        #pygame.font.init()
         self.c = None
         self.game = None
         self.clock = pygame.time.Clock()
-        self.main_menu = MainMenu('main')
-        self.main_menu.register(self)
+
+        self.main_menu = m = Menu('Main')
+        m.register(self)
+        m.listeners = {
+            pygame.K_DOWN: lambda: self.c.move_player(0, 1),
+            pygame.K_UP: lambda: self.c.move_player(0, -1),
+            pygame.K_RIGHT: lambda: self.c.move_player(1, 0),
+            pygame.K_LEFT: lambda: self.c.move_player(-1, 0),
+            pygame.K_SPACE: m.onPressed
+        }
+        m.events = {
+            pygame.QUIT:
+                pygame.quit()
+        }
+        m.antiListeners = {
+            pygame.K_SPACE: m.unPressed
+        }
+        m.menuReference = "Main"
+        m.displayName = "Main Menu"
+
+        self.scoreboard = m = Menu("Scores")
+        m.register(self)
+        m.listeners = {
+            pygame.K_DOWN: lambda: self.c.move_player(0, 1),
+            pygame.K_UP: lambda: self.c.move_player(0, -1),
+            pygame.K_RIGHT: lambda: self.c.move_player(1, 0),
+            pygame.K_LEFT: lambda: self.c.move_player(-1, 0),
+            pygame.K_SPACE: m.onPressed
+        }
+        m.events = {
+            pygame.QUIT:
+                pygame.quit()
+        }
+        m.antiListeners = {
+            pygame.K_SPACE: m.unPressed
+        }
+        m.menuReference = "Scores"
+        m.displayName = "Scoreboard"
+
         self.mixer = pygame.mixer
         self.win = pygame.display.set_mode((512, 512))
         self.songname = ''
-        self.scoreboard = ScoreBoard("scores")
+        #self.scoreboard = ScoreBoard("scores")
+        #self.scoreboard.register(self)
+
+    def stop_scoreboard(self):
+        self.scoreboard.stop()
 
     def run_view(self):
+        #pygame.init()
         self.main_menu.initialise()
 
     def ask_player_name(self):
@@ -113,6 +152,7 @@ class View:
 class Menu:
     """class for frontend menu control"""
     def __init__(self, name):
+        #pygame.init()
         self.name = name
         self._view = None
         self.trails = []
@@ -124,6 +164,19 @@ class Menu:
         self.events = {}
         self.menuReference = "none"
         self.displayName = "Unknown Menu"
+
+    def stop(self):
+        self.run = False
+
+    def onPressed(self):
+        buttons = self._view.get_buttons(self.menuReference)
+        for button in buttons:
+            if button[7] and not self.pressed:
+                self.pressed = True
+                self._view.pressed(button[0], self.menuReference)
+
+    def unPressed(self):
+        self.pressed = False
 
     def register(self, view):
         self._view = view
@@ -206,6 +259,9 @@ class Menu:
 
     def initialise(self, points=None):
         """runs the menu frontend"""
+        if self.name == "Scores":
+            self._view.c.get_scores()
+        #pygame.init()
         pygame.display.set_caption('Rhythm Game - '+self.displayName)
         stop = False
         while self.run:
@@ -225,6 +281,7 @@ class Menu:
                     self.antiListeners[listener]()
 
             self.draw_menu()
+        self.run = True
 
 
 class ScoreBoard(Menu):
