@@ -1,6 +1,9 @@
 from model import *
 from view import *
 
+import pygame
+#pygame.init()
+
 
 class Controller:
     """class for going between UI and backend"""
@@ -56,8 +59,14 @@ class Controller:
         self._model.obstacles = []
         self._model.player = Player()
 
+    def stop_scoreboard(self):
+        self._view.stop_scoreboard()
+
+    def get_scores(self):
+        self._model.menus["Scores"].top_10()
+
     def scoreboard(self):
-        self._view.scoreboard.run()
+        self._view.scoreboard.initialise()
 
     def get_points(self):
         """gets the number of obstacles avoided"""
