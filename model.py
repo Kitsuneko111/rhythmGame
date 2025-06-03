@@ -393,12 +393,7 @@ class Model:
         self.difficulties = [1, 2, 4, 30, 180]
         self.diffNames = ['Easiest', 'Easy', 'Normal', 'Hard', 'MAX']
         self.menus = {'Main': MainMenu(), "Scores": Scoreboard()}
-        self.songs = [("./Astley.mp3", 113),
-                      ("./The Piano Guys/So Far, So Good/03 - Fight Song _ Amazing Grace.mp3", 88),
-                      ("./The Piano Guys/So Far, So Good/09 - Titanium _ Pavane.mp3", 127),
-                      ("./The Fear.mp3", 134),
-                      ("./Test2.ogg", 175),
-                      ("./Ghost (3).ogg", 110)
+        self.songs = [("./song.mp3", 113) # song, bpm
                       ]
         self.track_no = 0
         self.register()
